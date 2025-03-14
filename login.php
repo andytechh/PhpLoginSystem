@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        if (password_verify($password, $row['passwrd'])) {
+        if ($password == $row['passwrd']) { // Direct password comparison (no hashing)
             $_SESSION['username'] = $username;
             header("Location: welcome.php");
             exit();

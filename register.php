@@ -6,15 +6,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $last_name = $_POST['last_name'];
     $contact_number = $_POST['contact_number'];
     $username = $_POST['username'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Secure password
+    $password = $_POST['password']; 
 
-    $sql = "INSERT INTO user (first_name, last_name, contactnum, username, passwrd) 
-            VALUES ('$first_name', '$last_name', '$contact_number', '$username', '$password')";
+    $check_query = "SELECT * FROM user WHERE username='$username'";
+    $result = $conn->query($check_query);
 
-    if ($conn->query($sql) === TRUE) {
-        echo "Registration successful. <a href='login.php'>Login Here</a>";
+    if ($result->num_rows > 0) {
+        echo "Error: Username already exists. Try another one.";
     } else {
-        echo "Error: " . $sql . "<br>" . $conn->error;
+
+        $sql = "INSERT INTO user (first_name, last_name, contactnum, username, passwrd) 
+                VALUES ('$first_name', '$last_name', '$contact_number', '$username', '$password')";
+
+        if ($conn->query($sql) === TRUE) {
+            echo "Registration successful. <a href='login.php'>Login Here</a>";
+        } else {
+            echo "Error: " . $sql . "<br>" . $conn->error;
+        }
     }
 }
 
